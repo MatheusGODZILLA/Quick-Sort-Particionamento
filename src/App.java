@@ -6,29 +6,23 @@ public class App {
     // Função para medir o tempo de execução de cada algoritmo
     public static long measureTime(String partitionMethod, SortingFunction function, int[] arr) {
         long startTime = System.nanoTime();
-        int[] sortedArray = function.sort(arr.clone());
+        function.sort(arr.clone());
         long endTime = System.nanoTime();
         long timeTaken = endTime - startTime;
-
+    
         double milliseconds = (double) timeTaken / 1_000_000.0;
         String formattedTime = String.format("%.7f", milliseconds);
-
-        int trocas = contadorTrocas(arr, sortedArray);
+    
+        int trocas;
+        if (function instanceof QuickSortLomuto) {
+            trocas = ((QuickSortLomuto) function).getTrocas();
+        } else {
+            trocas = ((QuickSortHoare) function).getTrocas();
+        }
         System.out.println(partitionMethod + ": " + formattedTime + " milissegundos");
         System.out.println("Quantidade de trocas: " + trocas);
-
+    
         return timeTaken;
-    }
-
-    // Função para contar a quantidade de trocas
-    private static int contadorTrocas(int[] originalArray, int[] sortedArray) {
-        int trocas = 0;
-        for (int i = 0; i < originalArray.length; i++) {
-            if (originalArray[i] != sortedArray[i]) {
-                trocas++;
-            }
-        }
-        return trocas;
     }
 
     // Função para gerar um array de números aleatórios e únicos
